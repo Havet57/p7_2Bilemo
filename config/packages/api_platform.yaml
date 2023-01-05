@@ -1,0 +1,29 @@
+api_platform:
+    title: 'Bilmo API REST'
+    description: 'A Symfony API'
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        api_keys:
+            jwt:
+                name: Authorization
+                type: header
+    http_cache:
+        invalidation:
+            enabled: false
+            
+        public: true
+    defaults:
+        pagination_enabled: true
+        pagination_items_per_page: 2
+        cache_headers:
+            max_age: 1800
+            shared_max_age: 3600
+            vary: ['Content-Type', 'Authorization', 'Origin']
+    collection:
+        pagination:
+            page_parameter_name: pagination
+
+
