@@ -25,11 +25,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],
     operations: [
-    new Get(),
-    new Post(),
-    new Delete(),
-    new Put(),
-])]
+        new Get(),
+        new Post(),
+        new Delete(),
+        new Put(),
+    ]
+)]
 
 
 
@@ -41,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups('write')]
+    #[Groups(['read', 'write'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -56,11 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 
-    #[Groups('write')]
+    #[Groups(['read', 'write'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups('write')]
+    #[Groups('read')]
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
