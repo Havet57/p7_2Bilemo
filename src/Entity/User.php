@@ -7,180 +7,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
+use Doctrine\common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
+
+
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-/**
- * @ORM\Entity(repositoryClass="src\Repository\UserRepository")
- * @UniqueEntity("email")
- * @UniqueEntity("name")
- * @ApiResource(
- * 	collectionOperations={},
- * 	itemOperations={
- *     "showAll"={
- * 		   "route_name"="api.users.client.showAll",
- *         "method"="GET",
- *         "path"="/users_client/{id}",
- *         "controller"=ApiUserController::class,
- * 			"swagger_context" = {
- * 				"summary" = "List of registered users linked to a client",
- * 			    "parameters" = {
- *                  {
- *                      "name" = "id",
- *                      "in" = "path",
- *                      "required" = true,
- *                      "type" = "integer",
- * 						"description" = "Id of your client"
- *                  }
- *              },
- *              "consumes" = {
- *                  "application/json",
- *               },
- *              "produces" = {
- *                  "application/json"
- *               }
- * 			}
- *     },
- *     "read"={
- * 		   "route_name"="api.users.read",
- *         "method"="GET",
- *         "path"="/users/{id}",
- * 			"swagger_context" = {
- * 				"summary" = "Detail of a registered user",
- * 			    "parameters" = {
- *                  {
- *                      "name" = "id",
- *                      "in" = "path",
- *                      "required" = true,
- *                      "type" = "integer",
- * 						"description" = "Id of your user"
- *                  }
- *              },
- *              "consumes" = {
- *                  "application/json",
- *               },
- *              "produces" = {
- *                  "application/json"
- *               }
- * 			}
- *     },
- *     "createUser"={
- * 		   "route_name"="api.users.create",
- *         "method"="POST",
- *         "path"="/users_client/{id}",
- * 			"swagger_context" = {
- * 				"summary" = "Add a new user linked to a client",
- * 			    "parameters" = {
- *                  {
- *                      "name" = "id",
- *                      "in" = "path",
- *                      "required" = true,
- *                      "type" = "integer",
- * 						"description" = "Id of your client. The created user will be linked to this client",
- *                  },
- *                  {
- *                      "name" = "user",
- *                      "in" = "body",
- *                      "required" = true,
- *                      "type" = "string",
- * 						"description" = "Data of your new user",
- * 						"schema": {
- * 							"properties": {
- *         						"name": {
- * 									"type": "string",
- * 									"example": "name of user"
- * 								},
- * 								"email": {
- * 									"type": "string",
- * 									"example": "user@user.fr"
- * 								},
- * 								"password": {
- * 									"type": "string",
- * 									"example": "password"
- * 								},
- * 							}
- * 						 }
- *                  }
- *              },
- *              "consumes" = {
- *                  "application/json",
- *               },
- *              "produces" = {
- *                  "application/json"
- *               }
- * 			}
- *     },
- *     "updateUser"={
- * 		   "route_name"="api.users.update",
- *         "method"="PUT",
- *         "path"="/users/{id}",
- * 			"swagger_context" = {
- * 				"summary" = "Update a user",
- * 			    "parameters" = {
- *                  {
- *                      "name" = "id",
- *                      "in" = "path",
- *                      "required" = true,
- *                      "type" = "integer",
- * 						"description" = "Id of your user.",
- *                  },
- *                  {
- *                      "name" = "user",
- *                      "in" = "body",
- *                      "required" = true,
- *                      "type" = "string",
- * 						"description" = "Data of your new user",
- * 						"schema": {
- * 							"properties": {
- *         						"name": {
- * 									"type": "string",
- * 									"example": "name of user"
- * 								},
- * 								"email": {
- * 									"type": "string",
- * 									"example": "user@user.fr"
- * 								},
- * 								"password": {
- * 									"type": "string",
- * 									"example": "password"
- * 								},
- * 							}
- * 						 }
- *                  }
- *              },
- *              "consumes" = {
- *                  "application/json",
- *               },
- *              "produces" = {
- *                  "application/json"
- *               }
- * 			}
- *     },
- *     "deleteUser"={
- * 		   "route_name"="api.users.delete",
- *         "method"="DELETE",
- *         "path"="/users/{id}",
- * 			"swagger_context" = {
- * 				"summary" = "Delete a user linked to a client",
- * 				"parameters": {
- * 					{
- * 						"name": "id",
- * 						"in": "path",
- * 						"required": true,
- * 						"type": "integer",
- * 						"description": "Id of user to delete"
- * 					}
- * 				},
- *              "consumes" = {
- *                  "application/json",
- *               },
- *              "produces" = {
- *                  "application/json"
- *               }
- * 			}
- *     },
- * }
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+    operations: [
+    new Get(),
+    new Post(),
+    new Delete(),
+    new Put(),
+])]
+
+
+
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -188,23 +41,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('write')]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
     private array $roles = [];
 
+    #[Groups('write')]
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
 
+
+    #[Groups('write')]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'user', cascade:["persist"])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[Groups('write')]
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
     public function getId(): ?int
