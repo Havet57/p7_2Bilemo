@@ -12,11 +12,17 @@ use ApiPlatform\Metadata\Post;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource   (    
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],
+    operations: [
+        new Get(),
+        new GetCollection(),
+    ]
     )]
 
 

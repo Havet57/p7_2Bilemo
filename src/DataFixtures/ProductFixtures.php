@@ -12,7 +12,9 @@ class ProductFixtures extends Fixture
     {
         $productsData=[
             ['id'=>1, 'name'=>'ophone', 'description'=>"nian nian nian ce produit nian nian", 'price'=>685],
-            ['id'=>2, 'name'=>'sumsung', 'description'=>" tip top nian nian nian ce produit tip top nian nian", 'price'=>1300],
+            ['id'=>2, 'name'=>'ophone 16', 'description'=>"nian nian nian ce produit nian nian", 'price'=>1200],
+            ['id'=>1, 'name'=>'ophone 48', 'description'=>"nian nian nian ce produit nian nian", 'price'=>14999],
+            ['id'=>6, 'name'=>'sumsung', 'description'=>" tip top nian nian nian ce produit tip top nian nian", 'price'=>1300],
            
         ];
         foreach($productsData as $productData) {
